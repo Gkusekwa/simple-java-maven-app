@@ -50,8 +50,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     script {
-                        echo "Deploying to ${ENV}..."
-                        gv.deployApp()
+                        gv.deployApp("${ENV}")
                     }
                 }
             }

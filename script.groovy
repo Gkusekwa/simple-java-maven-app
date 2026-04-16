@@ -9,8 +9,9 @@ def testApp() {
     sh 'mvn test'
 }
 
-def deployApp() {
-    echo "Deploying application..."
+def deployApp(String environment) {
+    echo "Deploying to ${environment}..."
+    echo "Deploying version ${params.VERSION} to ${environment}..."
     echo "Logging in to Docker Hub..."
     sh "echo \${DOCKER_PASS} | docker login -u \${DOCKER_USER} --password-stdin"
     echo "Building Docker image..."
