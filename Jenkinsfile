@@ -1,12 +1,17 @@
 pipeline {
     agent any
+    environment {
+        NEW_VERSION = '1.3.0'
+    }
     tools {
         maven 'jenkins-maven'
     }
     stages {
         stage('Build') {
             steps {
-                sh 'mvn -B -DskipTests clean package'
+                echo "Building the application ......."
+                echo "Building version ${env.NEW_VERSION}..."
+             //   sh 'mvn -B -DskipTests clean package'
             }
         }
         stage('Test') {
