@@ -5,18 +5,25 @@ pipeline {
         booleanParam(name: 'executeTests', defaultValue: true, description: 'Whether to run tests')
     }
     environment {
-        NEW_VERSION = '1.3.0'
+        NEW_VERSION = "${params.VERSION}"
         DOCKER_CREDENTIALS = credentials('dockerhub-credentials')
     }
     tools {
         maven 'jenkins-maven'
     }
     stages {
+        stage('init') {
+            steps {
+                script {
+                    gv = load 'script.groovy'
+                }
+            }
+        }
         stage('Build') {
             steps {
-                echo "Building the application ......."
-                echo "Building version ${env.NEW_VERSION}..."
-             //   sh 'mvn -B -DskipTests clean package'
+                script {
+                    gv.buildApp()
+                }
             }
         }
         stage('Test') {
@@ -26,24 +33,15 @@ pipeline {
                 }
             }
             steps {
-                echo 'Running tests...'
-             //   sh 'mvn test'
+                script {
+                    gv.testApp()
+                }
             }
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying application...'
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'USER', passwordVariable: 'PWD')]) {
-                    sh '''
-                        echo "Logging in to Docker Hub..."
-                        
-
-                        echo "Building Docker image..."
-                    
-
-                        echo "Pushing Docker image to registry..."
-
-                    '''
+                script {
+                    gv.deployApp()
                 }
             }
         }
