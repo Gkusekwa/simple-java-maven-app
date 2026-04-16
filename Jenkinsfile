@@ -42,8 +42,10 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                script {
-                    gv.deployApp()
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    script {
+                        gv.deployApp()
+                    }
                 }
             }
         }
