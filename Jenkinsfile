@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    parameters {
+        choice(name: 'VERSION', choices: ['1.3.0', '1.3.1', '1.4.0'], description: 'Version to build and deploy')
+        booleanParam(name: 'executeTests', defaultValue: true, description: 'Whether to run tests')
+    }
     environment {
         NEW_VERSION = '1.3.0'
         DOCKER_CREDENTIALS = credentials('dockerhub-credentials')
@@ -16,9 +20,14 @@ pipeline {
             }
         }
         stage('Test') {
+            when {
+                expression {
+                    params.executeTests
+                }
+            }
             steps {
-                echo 'Testing the application...'
-         //       sh 'mvn test'
+                echo 'Running tests...'
+             //   sh 'mvn test'
             }
         }
         stage('Deploy') {
