@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         NEW_VERSION = '1.3.0'
+        DOCKER_CREDENTIALS = credentials('dockerhub-credentials')
     }
     tools {
         maven 'jenkins-maven'
@@ -23,6 +24,18 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying application...'
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'USER', passwordVariable: 'PWD')]) {
+                    sh '''
+                        echo "Logging in to Docker Hub..."
+                        
+
+                        echo "Building Docker image..."
+                    
+
+                        echo "Pushing Docker image to registry..."
+
+                    '''
+                }
             }
         }
     }
