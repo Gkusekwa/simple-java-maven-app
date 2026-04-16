@@ -41,9 +41,16 @@ pipeline {
             }
         }
         stage('Deploy') {
+            input {
+                message 'Select the environment to deploy to:'
+                parameters {
+                    choice(name: 'ENV', choices: ['dev', 'staging', 'prod'], description: 'Deployment environment')
+                }
+            }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     script {
+                        echo "Deploying to ${ENV}..."
                         gv.deployApp()
                     }
                 }
